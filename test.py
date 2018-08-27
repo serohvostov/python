@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from selenium.webdriver.firefox.webdriver import WebDriver
-from selenium.webdriver.common.action_chains import ActionChains
-import time, unittest
+import unittest
 
 def is_alert_present(wd):
     try:
@@ -16,9 +15,20 @@ class test(unittest.TestCase):
         self.wd.implicitly_wait(60)
     
     def test_test(self):
-        success = True
         wd = self.wd
-        wd.get("http://demo.polr.me/")
+        # открытие сайта
+        self.open_browser(wd)
+        self.login(wd)
+        self.link(wd)
+
+    def link(self, wd):
+        wd.find_element_by_name("link-url").click()
+        wd.find_element_by_name("link-url").clear()
+        wd.find_element_by_name("link-url").send_keys(
+            "https://confluence.speechpro.com/pages/viewpage.action?pageId=70233033")
+        wd.find_element_by_id("shorten").click()
+
+    def login(self, wd):
         wd.find_element_by_css_selector("h1.title").click()
         wd.find_element_by_css_selector("a.dropdown-toggle").click()
         wd.find_element_by_name("username").click()
@@ -30,12 +40,10 @@ class test(unittest.TestCase):
         wd.find_element_by_css_selector("body").click()
         wd.find_element_by_css_selector("a.dropdown-toggle").click()
         wd.find_element_by_name("login").click()
-        wd.find_element_by_name("link-url").click()
-        wd.find_element_by_name("link-url").clear()
-        wd.find_element_by_name("link-url").send_keys("https://confluence.speechpro.com/pages/viewpage.action?pageId=70233033")
-        wd.find_element_by_id("shorten").click()
-        self.assertTrue(success)
-    
+
+    def open_browser(self, wd):
+        wd.get("http://demo.polr.me/")
+
     def tearDown(self):
         self.wd.quit()
 
